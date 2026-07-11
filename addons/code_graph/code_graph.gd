@@ -58,9 +58,7 @@ func add_graph_node(content: ScriptParser.ScriptContent) -> void:
 	new_graph_node.add_child(HSeparator.new())
 	
 	for method in content.methods:
-		var label := Label.new()
 		add_graph_node_label(new_graph_node, str(method["name"], ": ", type_string(method["return"]["type"])))
-		new_graph_node.add_child(label)
 
 
 func add_graph_node_label(graph_node: GraphNode, label_text: String) -> void:
