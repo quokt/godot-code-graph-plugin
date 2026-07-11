@@ -13,15 +13,28 @@ func add_graph_node(content: GDScriptParser.ScriptContent) -> void:
 	add_child(new_graph_node)
 	new_graph_node.title = content.classname
 	
+	for _enum in content.enums:
+		add_graph_node_label(new_graph_node, str(_enum["name"], ": ", _enum["members"]))
+	
+	new_graph_node.add_child(HSeparator.new())
+	
+	for constant in content.constants:
+		add_graph_node_label(new_graph_node, str(constant["name"], ": ", type_string(constant["type"]), " = ", constant["value"]))
+	
+	new_graph_node.add_child(HSeparator.new())
+	
 	for property in content.properties:
-		var label := Label.new()
-		label.text = str(property["name"], ": ", type_string(property["type"]))
-		new_graph_node.add_child(label)
+		add_graph_node_label(new_graph_node, str(property["name"], ": ", type_string(property["type"])))
 	
 	new_graph_node.add_child(HSeparator.new())
 	
 	for method in content.methods:
 		var label := Label.new()
-		label.text = str(method["name"], ": ", type_string(method["return"]["type"]))
+		add_graph_node_label(new_graph_node, str(method["name"], ": ", type_string(method["return"]["type"])))
 		new_graph_node.add_child(label)
-		
+
+
+func add_graph_node_label(graph_node: GraphNode, label_text: String) -> void:
+		var label := Label.new()
+		label.text = label_text
+		graph_node.add_child(label)
