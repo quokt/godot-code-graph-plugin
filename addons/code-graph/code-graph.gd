@@ -1,6 +1,8 @@
 @tool
 extends EditorPlugin
 
+# Dock reference.
+var dock
 
 func _enable_plugin() -> void:
 	# Add autoloads here.
@@ -12,11 +14,17 @@ func _disable_plugin() -> void:
 	pass
 
 
-func _enter_tree() -> void:
-	# Initialization of the plugin goes here.
-	pass
+# Plugin initialization.
+func _enter_tree():
+	dock = EditorDock.new()
+	dock.title = "Code Graph"
+	dock.default_slot = EditorDock.DOCK_SLOT_BOTTOM
+	var dock_content = preload("./code_graph_root.tscn").instantiate()
+	dock.add_child(dock_content)
+	add_dock(dock)
 
-
-func _exit_tree() -> void:
-	# Clean-up of the plugin goes here.
-	pass
+# Plugin clean-up.
+func _exit_tree():
+	remove_dock(dock)
+	dock.queue_free()
+	dock = null

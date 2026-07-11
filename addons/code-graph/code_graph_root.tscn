@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bu02vi6oo68ts"]
+
+[node name="code_graph_root" type="GraphEdit" unique_id=1614678529]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+grid_pattern = 1
+
+[node name="GraphNode" type="GraphNode" parent="." unique_id=2116320431]
+layout_mode = 0
+offset_right = 151.0
+offset_bottom = 132.0
+mouse_filter = 1
+title = "Node1"
+
+[node name="GraphNode2" type="GraphNode" parent="." unique_id=167099740]
+layout_mode = 0
+offset_right = 151.0
+offset_bottom = 132.0
+mouse_filter = 1
+title = "Node2"
