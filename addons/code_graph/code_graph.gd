@@ -19,7 +19,7 @@ func _enter_tree():
 	dock = EditorDock.new()
 	dock.title = "Code Graph"
 	dock.default_slot = EditorDock.DOCK_SLOT_BOTTOM
-	var dock_content = preload("./code_graph_root.tscn").instantiate()
+	var dock_content = preload("./code_graph_dock.tscn").instantiate()
 	dock.add_child(dock_content)
 	add_dock(dock)
 
