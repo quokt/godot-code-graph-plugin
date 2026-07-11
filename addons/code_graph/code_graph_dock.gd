@@ -7,7 +7,7 @@ extends Control
 func _on_refresh_pressed() -> void:
 	code_graph.clear_nodes()
 	for file_path in find_gd_files("res://"):
-		var content = GDScriptParser.parse_file(file_path)
+		var content = ScriptParser.parse_file(file_path)
 		code_graph.add_graph_node(content)
 	
 

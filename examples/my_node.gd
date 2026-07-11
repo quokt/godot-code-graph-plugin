@@ -15,5 +15,5 @@ var my_property: String = ""
 @export var my_export_property: String = ""
 
 
-func my_method(arg: int) -> void:
-	return
+static func my_method(arg: int) -> int:
+	return 2

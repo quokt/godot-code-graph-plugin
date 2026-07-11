@@ -11,5 +11,5 @@ var my_property: String = ""
 @export var my_export_property: String = ""
 
 
-func my_method(arg: int) -> int:
-	return 2
+func my_method(arg: int) -> void:
+	print(MyNode.my_method(arg))

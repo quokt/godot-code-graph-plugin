@@ -8,7 +8,7 @@ func clear_nodes() -> void:
 			node.queue_free()
 
 
-func add_graph_node(content: GDScriptParser.ScriptContent) -> void:
+func add_graph_node(content: ScriptParser.ScriptContent) -> void:
 	var new_graph_node := GraphNode.new()
 	add_child(new_graph_node)
 	new_graph_node.title = content.classname

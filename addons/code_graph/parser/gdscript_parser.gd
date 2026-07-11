@@ -1,4 +1,4 @@
-class_name GDScriptParser extends RefCounted
+class_name ScriptParser extends RefCounted
 
 class ScriptContent extends RefCounted:
 	var classname: String = ""
