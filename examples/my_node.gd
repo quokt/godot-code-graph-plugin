@@ -14,6 +14,8 @@ var my_property: String = ""
 
 @export var my_export_property: String = ""
 
+signal my_signal
+
 
 static func my_method(arg: int) -> int:
 	return 2

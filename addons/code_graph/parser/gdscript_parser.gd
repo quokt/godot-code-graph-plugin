@@ -1,5 +1,6 @@
 class_name ScriptParser extends RefCounted
 
+
 class ScriptContent extends RefCounted:
 	var classname: String = ""
 	var parent_class: String = ""

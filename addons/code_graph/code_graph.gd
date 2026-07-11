@@ -2,10 +2,39 @@
 class_name CodeGraph extends GraphEdit
 
 
+func refresh() -> void:
+	clear_nodes()
+	for file_path in find_gd_files("res://"):
+		var content = ScriptParser.parse_file(file_path)
+		add_graph_node(content)
+
+
 func clear_nodes() -> void:
 	for node: Node in get_children():
 		if node is GraphNode:
 			node.queue_free()
+
+
+func find_gd_files(path: String) -> PackedStringArray:
+	var files := PackedStringArray()
+	var dir := DirAccess.open(path)
+	
+	if not dir:
+		return files
+		
+	dir.list_dir_begin()
+	var file_name := dir.get_next()
+	
+	while file_name != "":
+		if dir.current_is_dir() and not file_name in [".", "..", "addons"]:
+			files.append_array(find_gd_files(path.path_join(file_name)))
+		elif file_name.ends_with(".gd"):
+			files.append(path.path_join(file_name))
+		file_name = dir.get_next()
+		
+	dir.list_dir_end()
+	
+	return files
 
 
 func add_graph_node(content: ScriptParser.ScriptContent) -> void:
