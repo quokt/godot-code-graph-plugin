@@ -1,30 +1,27 @@
 @tool
-extends EditorPlugin
-
-# Dock reference.
-var dock
-
-func _enable_plugin() -> void:
-	# Add autoloads here.
-	pass
+class_name CodeGraph extends GraphEdit
 
 
-func _disable_plugin() -> void:
-	# Remove autoloads here.
-	pass
+func clear_nodes() -> void:
+	for node: Node in get_children():
+		if node is GraphNode:
+			node.queue_free()
 
 
-# Plugin initialization.
-func _enter_tree():
-	dock = EditorDock.new()
-	dock.title = "Code Graph"
-	dock.default_slot = EditorDock.DOCK_SLOT_BOTTOM
-	var dock_content = preload("./code_graph_dock.tscn").instantiate()
-	dock.add_child(dock_content)
-	add_dock(dock)
-
-# Plugin clean-up.
-func _exit_tree():
-	remove_dock(dock)
-	dock.queue_free()
-	dock = null
+func add_graph_node(content: GDScriptParser.ScriptContent) -> void:
+	var new_graph_node := GraphNode.new()
+	add_child(new_graph_node)
+	new_graph_node.title = content.classname
+	
+	for property in content.properties:
+		var label := Label.new()
+		label.text = str(property["name"], ": ", type_string(property["type"]))
+		new_graph_node.add_child(label)
+	
+	new_graph_node.add_child(HSeparator.new())
+	
+	for method in content.methods:
+		var label := Label.new()
+		label.text = str(method["name"], ": ", type_string(method["return"]["type"]))
+		new_graph_node.add_child(label)
+		

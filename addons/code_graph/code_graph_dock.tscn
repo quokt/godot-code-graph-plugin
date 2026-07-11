@@ -1,107 +1,28 @@
-[gd_scene format=3 uid="uid://bu02vi6oo68ts"]
+[gd_scene format=3 uid="uid://cfkb2lhy0unwg"]
 
-[node name="GraphEdit" type="GraphEdit" unique_id=1614678529]
+[ext_resource type="Script" uid="uid://jv5ajn1n8doe" path="res://addons/code_graph/code_graph_dock.gd" id="1_2f5rj"]
+[ext_resource type="PackedScene" uid="uid://bu02vi6oo68ts" path="res://addons/code_graph/code_graph.tscn" id="1_8sm1e"]
+
+[node name="CodeGraphDock" type="Control" unique_id=1343449264]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-grid_pattern = 1
-snapping_enabled = false
+script = ExtResource("1_2f5rj")
 
-[node name="GraphNode" type="GraphNode" parent="." unique_id=2116320431]
-layout_mode = 0
-offset_left = 202.0
-offset_top = 219.0
-offset_right = 353.0
-offset_bottom = 423.0
-mouse_filter = 1
-position_offset = Vector2(202, 219)
-title = "Node1"
-slot/0/left_enabled = false
-slot/0/left_type = 0
-slot/0/left_color = Color(1, 1, 1, 1)
-slot/0/left_icon = null
-slot/0/right_enabled = false
-slot/0/right_type = 0
-slot/0/right_color = Color(1, 1, 1, 1)
-slot/0/right_icon = null
-slot/0/draw_stylebox = true
-slot/1/left_enabled = false
-slot/1/left_type = 0
-slot/1/left_color = Color(1, 1, 1, 1)
-slot/1/left_icon = null
-slot/1/right_enabled = false
-slot/1/right_type = 0
-slot/1/right_color = Color(1, 1, 1, 1)
-slot/1/right_icon = null
-slot/1/draw_stylebox = true
-slot/2/left_enabled = false
-slot/2/left_type = 0
-slot/2/left_color = Color(1, 1, 1, 1)
-slot/2/left_icon = null
-slot/2/right_enabled = false
-slot/2/right_type = 0
-slot/2/right_color = Color(1, 1, 1, 1)
-slot/2/right_icon = null
-slot/2/draw_stylebox = true
-slot/3/left_enabled = false
-slot/3/left_type = 0
-slot/3/left_color = Color(1, 1, 1, 1)
-slot/3/left_icon = null
-slot/3/right_enabled = false
-slot/3/right_type = 0
-slot/3/right_color = Color(1, 1, 1, 1)
-slot/3/right_icon = null
-slot/3/draw_stylebox = true
-slot/4/left_enabled = false
-slot/4/left_type = 0
-slot/4/left_color = Color(1, 1, 1, 1)
-slot/4/left_icon = null
-slot/4/right_enabled = false
-slot/4/right_type = 0
-slot/4/right_color = Color(1, 1, 1, 1)
-slot/4/right_icon = null
-slot/4/draw_stylebox = true
-slot/5/left_enabled = false
-slot/5/left_type = 0
-slot/5/left_color = Color(1, 1, 1, 1)
-slot/5/left_icon = null
-slot/5/right_enabled = false
-slot/5/right_type = 0
-slot/5/right_color = Color(1, 1, 1, 1)
-slot/5/right_icon = null
-slot/5/draw_stylebox = true
+[node name="CodeGraph" parent="." unique_id=1614678529 instance=ExtResource("1_8sm1e")]
+layout_mode = 1
+metadata/_edit_lock_ = true
 
-[node name="PropertyA" type="Label" parent="GraphNode" unique_id=1628859864]
-layout_mode = 2
-text = "Property A"
+[node name="Refresh" type="Button" parent="." unique_id=1753750880]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 331.0
+offset_top = 14.0
+offset_right = 399.0
+offset_bottom = 45.0
+text = "Refresh"
 
-[node name="PropertyB" type="Label" parent="GraphNode" unique_id=57554983]
-layout_mode = 2
-text = "Property B"
-
-[node name="HSeparator" type="HSeparator" parent="GraphNode" unique_id=1011552194]
-layout_mode = 2
-
-[node name="MethodA" type="Label" parent="GraphNode" unique_id=1648646255]
-layout_mode = 2
-text = "Method A"
-
-[node name="MethodB" type="Label" parent="GraphNode" unique_id=244343471]
-layout_mode = 2
-text = "Method B"
-
-[node name="MethodC" type="Label" parent="GraphNode" unique_id=387755179]
-layout_mode = 2
-text = "Method C"
-
-[node name="GraphNode2" type="GraphNode" parent="." unique_id=167099740]
-layout_mode = 0
-offset_left = 675.0
-offset_top = 213.0
-offset_right = 826.0
-offset_bottom = 345.0
-mouse_filter = 1
-position_offset = Vector2(675, 213)
-title = "Node2"
+[connection signal="pressed" from="Refresh" to="." method="_on_refresh_pressed"]
