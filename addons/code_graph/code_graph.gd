@@ -4,6 +4,11 @@ class_name CodeGraph extends GraphEdit
 var exclude_dirs: Array = [".", "..", "addons"]
 
 
+class GDFileInfo extends RefCounted:
+	var path: String = ""
+	var file_name: String = ""
+
+
 func refresh() -> void:
 	clear_nodes()
 	for file_path in find_gd_files("res://"):
@@ -17,8 +22,8 @@ func clear_nodes() -> void:
 			node.queue_free()
 
 
-func find_gd_files(path: String) -> PackedStringArray:
-	var files := PackedStringArray()
+func find_gd_files(path: String) -> Array[GDFileInfo]:
+	var files: Array[GDFileInfo] = []
 	var dir := DirAccess.open(path)
 	
 	if not dir:
@@ -28,10 +33,13 @@ func find_gd_files(path: String) -> PackedStringArray:
 	var file_name := dir.get_next()
 	
 	while file_name != "":
+		var gd_file_info := GDFileInfo.new()
 		if dir.current_is_dir() and not file_name in exclude_dirs:
 			files.append_array(find_gd_files(path.path_join(file_name)))
 		elif file_name.ends_with(".gd"):
-			files.append(path.path_join(file_name))
+			gd_file_info.file_name = file_name
+			gd_file_info.path = path.path_join(file_name)
+			files.append(gd_file_info)
 		file_name = dir.get_next()
 		
 	dir.list_dir_end()
@@ -42,7 +50,7 @@ func find_gd_files(path: String) -> PackedStringArray:
 func add_graph_node(content: ScriptParser.ScriptParserResult) -> void:
 	var new_graph_node := GraphNode.new()
 	add_child(new_graph_node)
-	new_graph_node.title = content.classname
+	new_graph_node.title = content.classname if content.classname else content.script_name
 	
 	for enum_name in content.enums.keys():
 		add_graph_node_label(new_graph_node, str(enum_name, ": ", content.enums[enum_name]))

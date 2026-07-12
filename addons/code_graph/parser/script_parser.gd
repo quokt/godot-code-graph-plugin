@@ -2,6 +2,7 @@ class_name ScriptParser extends RefCounted
 
 
 class ScriptParserResult extends RefCounted:
+	var script_name: String = ""
 	var classname: String = ""
 	var parent_class: String = ""
 	var enums: Dictionary[String, Array] = {} #contains "name" and "members"
@@ -16,10 +17,11 @@ class ConstantMapExtract extends RefCounted:
 	var constants: Dictionary[String, Dictionary] = {}
 
 
-static func parse_file(file_path: String) -> ScriptParserResult:
+static func parse_file(gd_file_info: CodeGraph.GDFileInfo) -> ScriptParserResult:
 	var script_content := ScriptParserResult.new()
-	var script: Script = ResourceLoader.load(file_path, "Script", ResourceLoader.CACHE_MODE_IGNORE)
+	var script: Script = ResourceLoader.load(gd_file_info.path, "Script", ResourceLoader.CACHE_MODE_IGNORE)
 	
+	script_content.script_name = gd_file_info.file_name
 	script_content.classname = script.get_global_name()
 	
 	var constant_map_extract := get_constant_map_extract(script.get_script_constant_map())
