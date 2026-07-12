@@ -67,7 +67,6 @@ func find_gd_files(path: String) -> Array[GDFileInfo]:
 
 func add_graph_node(content: ScriptParser.ScriptParserResult) -> void:
 	var new_graph_node := GraphNode.new()
-	var graph_node_dictionary: Dictionary = {}
 	add_child(new_graph_node)
 
 	var count: int = 0
