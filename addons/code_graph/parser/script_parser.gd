@@ -1,23 +1,23 @@
 class_name ScriptParser extends RefCounted
 
 
-class ScriptContent extends RefCounted:
+class ScriptParserResult extends RefCounted:
 	var classname: String = ""
 	var parent_class: String = ""
-	var enums: Array[Dictionary] = [] #contains "name" and "members"
-	var constants: Array[Dictionary] = [] #contains "name", "type" and "value"
+	var enums: Dictionary[String, Array] = {} #contains "name" and "members"
+	var constants: Dictionary[String, Dictionary] = {} #contains "name", "type" and "value"
 	var properties: Array[Dictionary] = []
 	var signals: Array = []
 	var methods: Array = []
 
 
 class ConstantMapExtract extends RefCounted:
-	var enums: Array[Dictionary]
-	var constants: Array[Dictionary]
+	var enums: Dictionary[String, Array] = {}
+	var constants: Dictionary[String, Dictionary] = {}
 
 
-static func parse_file(file_path: String) -> ScriptContent:
-	var script_content := ScriptContent.new()
+static func parse_file(file_path: String) -> ScriptParserResult:
+	var script_content := ScriptParserResult.new()
 	var script: Script = ResourceLoader.load(file_path, "Script", ResourceLoader.CACHE_MODE_IGNORE)
 	
 	script_content.classname = script.get_global_name()
@@ -27,7 +27,7 @@ static func parse_file(file_path: String) -> ScriptContent:
 	script_content.constants = constant_map_extract.constants
 	
 	script_content.properties = script.get_script_property_list().filter(
-		func(property): return property["type"] != TYPE_NIL
+		func(property): return not property["name"] in script_content.enums.keys()
 	)
 	
 	script_content.signals = script.get_script_signal_list()
@@ -49,15 +49,11 @@ static func get_constant_map_extract(constant_map: Dictionary) -> ConstantMapExt
 					all_ints = false
 					break
 			if all_ints:
-				constant_map_extract.enums.append({
-					"name": constant_name, 
-					"members": constant_value
-					})
+				constant_map_extract.enums[constant_name] = constant_value.keys()
 				continue
-		constant_map_extract.constants.append({
-			"name": constant_name, 
-			"type": typeof(constant_value),
+		constant_map_extract.constants[constant_name] = {
+			"type": typeof(constant_value), 
 			"value": constant_value
-			})
+			}
 	
 	return constant_map_extract

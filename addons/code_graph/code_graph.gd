@@ -37,23 +37,30 @@ func find_gd_files(path: String) -> PackedStringArray:
 	return files
 
 
-func add_graph_node(content: ScriptParser.ScriptContent) -> void:
+func add_graph_node(content: ScriptParser.ScriptParserResult) -> void:
+	var parser = ClassDB.instantiate("Parser")
+	
 	var new_graph_node := GraphNode.new()
 	add_child(new_graph_node)
 	new_graph_node.title = content.classname
 	
-	for _enum in content.enums:
-		add_graph_node_label(new_graph_node, str(_enum["name"], ": ", _enum["members"]))
+	for enum_name in content.enums.keys():
+		add_graph_node_label(new_graph_node, str(enum_name, ": ", content.enums[enum_name]))
 	
 	new_graph_node.add_child(HSeparator.new())
 	
-	for constant in content.constants:
-		add_graph_node_label(new_graph_node, str(constant["name"], ": ", type_string(constant["type"]), " = ", constant["value"]))
+	for constant_name in content.constants.keys():
+		add_graph_node_label(new_graph_node, str(constant_name, ": ", type_string(content.constants[constant_name]["type"]), " = ", content.constants[constant_name]["value"]))
 	
 	new_graph_node.add_child(HSeparator.new())
 	
 	for property in content.properties:
 		add_graph_node_label(new_graph_node, str(property["name"], ": ", type_string(property["type"])))
+	
+	new_graph_node.add_child(HSeparator.new())
+	
+	for _signal in content.signals:
+		add_graph_node_label(new_graph_node, str(_signal["name"]))
 	
 	new_graph_node.add_child(HSeparator.new())
 	
