@@ -69,60 +69,59 @@ func add_graph_node(content: ScriptParser.ScriptParserResult) -> void:
 	var new_graph_node := GraphNode.new()
 	add_child(new_graph_node)
 
-	var count: int = 0
-	
 	new_graph_node.title = content.classname if content.classname else content.script_name
 	graph_nodes[new_graph_node] = []
 	
 	for enum_name in content.enums.keys():
-		var graph_node_member_info := GraphNodeMemberInfo.new()
-		graph_node_member_info.index = count
-		graph_node_member_info.member_name = enum_name
-		graph_node_member_info.member_type = Variant.Type.TYPE_NIL
-		graph_node_member_info.label_text = str(enum_name, ": ", content.enums[enum_name])
-		add_graph_node_member(new_graph_node, graph_node_member_info)
-		count += 1
+		add_graph_node_member(
+			new_graph_node, 
+			enum_name, 
+			TYPE_NIL, 
+			str(enum_name, ": ", content.enums[enum_name])
+			)
 	
 	for constant_name in content.constants.keys():
-		var graph_node_member_info := GraphNodeMemberInfo.new()
-		graph_node_member_info.index = count
-		graph_node_member_info.member_name = constant_name
-		graph_node_member_info.member_type = content.constants[constant_name]["type"] as Variant.Type
-		graph_node_member_info.label_text = str(constant_name, ": ", type_string(content.constants[constant_name]["type"]), " = ", content.constants[constant_name]["value"])
-		add_graph_node_member(new_graph_node, graph_node_member_info)
-		count += 1
+		var constant = content.constants[constant_name]
+		add_graph_node_member(
+			new_graph_node, 
+			constant_name, 
+			constant["type"] as Variant.Type, 
+			str(constant_name, ": ", type_string(constant["type"]), " = ", 
+			constant["value"]))
 	
 	for property in content.properties:
-		var graph_node_member_info := GraphNodeMemberInfo.new()
-		graph_node_member_info.index = count
-		graph_node_member_info.member_name = property["name"]
-		graph_node_member_info.member_type = property["type"] as Variant.Type
-		graph_node_member_info.label_text = str(property["name"], ": ", type_string(property["type"]))
-		add_graph_node_member(new_graph_node, graph_node_member_info)
-		count += 1
+		add_graph_node_member(
+			new_graph_node, 
+			property["name"], property["type"] as Variant.Type, 
+			str(property["name"], ": ", type_string(property["type"]))
+			)
 	
 	for _signal in content.signals:
-		var graph_node_member_info := GraphNodeMemberInfo.new()
-		graph_node_member_info.index = count
-		graph_node_member_info.member_name = _signal["name"]
-		graph_node_member_info.member_type = Variant.Type.TYPE_SIGNAL
-		graph_node_member_info.label_text = str(_signal["name"])
-		add_graph_node_member(new_graph_node, graph_node_member_info)
-		count += 1
+		add_graph_node_member(
+			new_graph_node, 
+			_signal["name"], 
+			TYPE_SIGNAL, 
+			str(_signal["name"])
+			)
 	
 	for method in content.methods:
-		var graph_node_member_info := GraphNodeMemberInfo.new()
-		graph_node_member_info.index = count
-		graph_node_member_info.member_name = method["name"]
-		graph_node_member_info.member_type = method["return"]["type"] as Variant.Type
-		graph_node_member_info.label_text = str(method["name"], ": ", type_string(method["return"]["type"]))
-		add_graph_node_member(new_graph_node, graph_node_member_info)
-		count += 1
+		add_graph_node_member(
+			new_graph_node, 
+			method["name"], 
+			method["return"]["type"] as Variant.Type, 
+			str(method["name"], ": ", type_string(method["return"]["type"]))
+			)
 	
 	add_slots(new_graph_node)
 
-func add_graph_node_member(graph_node: GraphNode, graph_node_member_info: GraphNodeMemberInfo) -> void:
-		var label := Label.new()
-		label.text = graph_node_member_info.label_text
-		graph_node.add_child(label)
-		graph_nodes[graph_node].append(graph_node_member_info)
+
+func add_graph_node_member(graph_node: GraphNode, name: String, member_type: Variant.Type, label_text: String) -> void:
+	var info := GraphNodeMemberInfo.new()
+	info.index = graph_nodes[graph_node].size()
+	info.member_name = name
+	info.member_type = member_type
+	info.label_text = label_text
+	var label := Label.new()
+	label.text = label_text
+	graph_node.add_child(label)
+	graph_nodes[graph_node].append(info)
