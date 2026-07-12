@@ -29,7 +29,7 @@ static func parse_file(gd_file_info: CodeGraph.GDFileInfo) -> ScriptParserResult
 	script_content.constants = constant_map_extract.constants
 	
 	script_content.properties = script.get_script_property_list().filter(
-		func(property): return not property["name"] in script_content.enums.keys()
+		func(property): return (not property["name"] in script_content.enums.keys()) and not property["name"].ends_with(".gd")
 	)
 	
 	script_content.signals = script.get_script_signal_list()

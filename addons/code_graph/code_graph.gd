@@ -11,8 +11,8 @@ class GDFileInfo extends RefCounted:
 
 func refresh() -> void:
 	clear_nodes()
-	for file_path in find_gd_files("res://"):
-		var content = ScriptParser.parse_file(file_path)
+	for file_info in find_gd_files("res://"):
+		var content = ScriptParser.parse_file(file_info)
 		add_graph_node(content)
 
 

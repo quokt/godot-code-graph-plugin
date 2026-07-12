@@ -1,4 +1,4 @@
-class_name MyNode3D extends Node
+extends Node
 
 enum MY_ENUM {BAR, FOO}
 
