@@ -1,6 +1,8 @@
 @tool
 class_name CodeGraph extends GraphEdit
 
+var exclude_dirs: Array = [".", "..", "addons"]
+
 
 func refresh() -> void:
 	clear_nodes()
@@ -26,7 +28,7 @@ func find_gd_files(path: String) -> PackedStringArray:
 	var file_name := dir.get_next()
 	
 	while file_name != "":
-		if dir.current_is_dir() and not file_name in [".", "..", "addons"]:
+		if dir.current_is_dir() and not file_name in exclude_dirs:
 			files.append_array(find_gd_files(path.path_join(file_name)))
 		elif file_name.ends_with(".gd"):
 			files.append(path.path_join(file_name))
@@ -38,8 +40,6 @@ func find_gd_files(path: String) -> PackedStringArray:
 
 
 func add_graph_node(content: ScriptParser.ScriptParserResult) -> void:
-	var parser = ClassDB.instantiate("Parser")
-	
 	var new_graph_node := GraphNode.new()
 	add_child(new_graph_node)
 	new_graph_node.title = content.classname
