@@ -3,6 +3,7 @@ class_name CodeGraph extends GraphEdit
 
 var exclude_dirs: Array = [".", "..", "addons"]
 
+var graph_nodes: Dictionary[String, Array] = {}
 
 class GDFileInfo extends RefCounted:
 	var path: String = ""
@@ -14,6 +15,7 @@ func refresh() -> void:
 	for file_info in find_gd_files("res://"):
 		var content = ScriptParser.parse_file(file_info)
 		add_graph_node(content)
+	print_debug(graph_nodes)
 
 
 func clear_nodes() -> void:
@@ -49,34 +51,38 @@ func find_gd_files(path: String) -> Array[GDFileInfo]:
 
 func add_graph_node(content: ScriptParser.ScriptParserResult) -> void:
 	var new_graph_node := GraphNode.new()
+	var graph_node_dictionary: Dictionary = {}
 	add_child(new_graph_node)
+	
 	new_graph_node.title = content.classname if content.classname else content.script_name
+	graph_nodes[new_graph_node.title] = []
 	
 	for enum_name in content.enums.keys():
-		add_graph_node_label(new_graph_node, str(enum_name, ": ", content.enums[enum_name]))
+		add_graph_node_member(new_graph_node, str(enum_name, ": ", content.enums[enum_name]), enum_name)
 	
 	new_graph_node.add_child(HSeparator.new())
 	
 	for constant_name in content.constants.keys():
-		add_graph_node_label(new_graph_node, str(constant_name, ": ", type_string(content.constants[constant_name]["type"]), " = ", content.constants[constant_name]["value"]))
+		add_graph_node_member(new_graph_node, str(constant_name, ": ", type_string(content.constants[constant_name]["type"]), " = ", content.constants[constant_name]["value"]), constant_name)
 	
 	new_graph_node.add_child(HSeparator.new())
 	
 	for property in content.properties:
-		add_graph_node_label(new_graph_node, str(property["name"], ": ", type_string(property["type"])))
+		add_graph_node_member(new_graph_node, str(property["name"], ": ", type_string(property["type"])), property["name"])
 	
 	new_graph_node.add_child(HSeparator.new())
 	
 	for _signal in content.signals:
-		add_graph_node_label(new_graph_node, str(_signal["name"]))
+		add_graph_node_member(new_graph_node, str(_signal["name"]), _signal["name"])
 	
 	new_graph_node.add_child(HSeparator.new())
 	
 	for method in content.methods:
-		add_graph_node_label(new_graph_node, str(method["name"], ": ", type_string(method["return"]["type"])))
+		add_graph_node_member(new_graph_node, str(method["name"], ": ", type_string(method["return"]["type"])), method["name"])
 
 
-func add_graph_node_label(graph_node: GraphNode, label_text: String) -> void:
+func add_graph_node_member(graph_node: GraphNode, label_text: String, member_name: String) -> void:
 		var label := Label.new()
 		label.text = label_text
 		graph_node.add_child(label)
+		graph_nodes[graph_node.title].append(member_name)
